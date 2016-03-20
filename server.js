@@ -1,25 +1,40 @@
 var express = require('express');
 var app = express();
-var router = express.Router();
+var low = require('lowdb');
+var storage = require('lowdb/file-sync');
+var db = low('db.json', { storage: storage });
 var bodyParser = require('body-parser');
-var methodOverride = require('method-override')
 
-// Add middlewares
-router.use(bodyParser.json({ limit: '10mb' }))
-router.use(bodyParser.urlencoded({ extended: false }))
-router.use(methodOverride())
+app.use(bodyParser.urlencoded({ extended: false }))
+
+app.use(bodyParser.json())
 
 app.get('/', function(req, res) {
     res.sendfile('client/index.html');
 });
 
-app.listen(3000, function() {
-    console.log('App listening on port 3000!');
+
+
+app.post('/activity', function(req, res) {
+    console.log(req.body)
+    if (req.body.user_id !== null && req.body.session_id !== null) {
+        db('activity').push(req.body);
+        res.sendStatus(200);
+    } else {
+        res.sendStatus(500);
+    }
 });
 
 
-// Create database
-var db
 
-// Expose database
-router.db = db
+app.get('/stats', function(req, res) {
+    console.log(db.object.activity)
+    res.sendStatus(200);
+});
+
+
+
+
+app.listen(3000, function() {
+    console.log('App listening on port 3000!');
+});
