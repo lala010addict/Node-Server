@@ -18,7 +18,11 @@ app.get('/', function(req, res) {
 app.post('/activity', function(req, res) {
     console.log(req.body)
     if (req.body.user_id !== null && req.body.session_id !== null) {
-        db('activity').push(req.body);
+        db('activity').push({
+            user_id: req.body.user_id,
+            session_id: req.body.session_id,
+            time: new Date()
+        });
         res.sendStatus(200);
     } else {
         res.sendStatus(500);
