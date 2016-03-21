@@ -4,6 +4,7 @@ var low = require('lowdb');
 var storage = require('lowdb/file-sync');
 var db = low('db.json', { storage: storage });
 var bodyParser = require('body-parser');
+var _ = require('lodash');
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -32,10 +33,25 @@ app.post('/activity', function(req, res) {
 
 
 app.get('/stats', function(req, res) {
-	console.log(req.query);
-	var startDate = req.query.start_date
-	var endDate = req.query.start_date
-    // console.log(db.object.activity)
+    console.log(req.query);
+    var startDateSplit = req.query.start_date.split("-");
+    var startDate = new Date(startDateSplit[0], startDateSplit[1] - 1, startDateSplit[2]);
+    console.log(startDate);
+
+    var endDateSplit = req.query.end_date.split("-");
+    var endDate = new Date(endDateSplit[0], endDateSplit[1] - 1, endDateSplit[2]);
+    console.log(endDate);
+    var results = _.filter(db.object.activity, function(a) {
+        var time = new Date(a.time);
+
+        return time >= startDate && time <= endDate
+
+        return hitDateMatches.length > 0;
+    });
+    console.log(results);
+
+
+
     res.sendStatus(200);
 });
 
