@@ -32,9 +32,31 @@ app.post('/activity', function(req, res) {
 
 
 app.get('/stats', function(req, res) {
-    console.log(db.object.activity)
+	console.log(req.query);
+	var startDate = req.query.start_date
+	var endDate = req.query.start_date
+    // console.log(db.object.activity)
     res.sendStatus(200);
 });
+
+
+
+
+
+
+
+// [2015-10-08T00:00:01] GET /stats?start_date=2015-10-05&end_date=2015-10-06 ->
+//   {
+//     num_sessions: 4,
+//     unique_users: 3,
+//     avg_sessions_per_user: 1.33
+//   }
+
+
+
+
+
+
 
 
 
